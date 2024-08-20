@@ -1,5 +1,6 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { food_list } from "../assets/assets";
+import PropTypes from "prop-types";
 
 export const StoreContext = createContext(null);
 
@@ -18,9 +19,16 @@ const StoreContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
   };
 
-  useEffect(() => {
-    console.log(cartItems);
-  }, [cartItems])
+  const getTotalCartAmount = () => {
+    let totalAmount = 0;
+    for (const item in cartItems) {
+      if (cartItems[item] > 0) {
+        let itemInfo = food_list.find((product) => product._id === item);
+        totalAmount += itemInfo.price * cartItems[item];
+      }
+    }
+    return totalAmount;
+  };
 
   const contextValue = {
     food_list,
@@ -28,6 +36,7 @@ const StoreContextProvider = (props) => {
     setCartItems,
     addToCart,
     removeFromCart,
+    getTotalCartAmount,
   };
 
   return (
@@ -35,6 +44,10 @@ const StoreContextProvider = (props) => {
       {props.children}
     </StoreContext.Provider>
   );
+};
+
+StoreContextProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default StoreContextProvider;
