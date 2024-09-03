@@ -1,14 +1,20 @@
-import { useContext } from "react";
 import "./FoodItem.css";
+import { useContext } from "react";
 import { assets } from "../../assets/assets";
 import { StoreContext } from "../../context/StoreContext";
+import PropTypes from "prop-types";
 
 const FoodItem = ({ id, name, price, description, image }) => {
-  const { cartItems, addToCart, removeFromCart } = useContext(StoreContext);
+  const { cartItems, addToCart, removeFromCart, url } =
+    useContext(StoreContext);
   return (
     <div className="food-item">
       <div className="food-item-img-container">
-        <img src={image} alt={id} className="food-item-image" />
+        <img
+          src={url + "/images/" + image}
+          alt={id}
+          className="food-item-image"
+        />
         {!cartItems[id] ? (
           <img
             className="add"
@@ -42,6 +48,14 @@ const FoodItem = ({ id, name, price, description, image }) => {
       </div>
     </div>
   );
+};
+
+FoodItem.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  description: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
 };
 
 export default FoodItem;
